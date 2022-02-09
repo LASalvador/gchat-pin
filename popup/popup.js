@@ -9,7 +9,7 @@ function addPinnedThreads(pinnedThreads) {
         var li = document.createElement("li")
         // Creating link element
         var link = document.createElement("a")
-        link.innerHTML = pinnedThread.threadName
+        link.innerHTML = pinnedThread.roomName + " - " + pinnedThread.threadName
         link.setAttribute("href", pinnedThread.threadLink)
         link.setAttribute("target", "_blank")
         // Create "close" button

@@ -22,6 +22,7 @@ function createPinButtonElement(threadId, thread) {
     pinButton.addEventListener('click', function () {
         var threadName = prompt('Thread name')
         let threadLink
+        // TODO get the thread link and room id from parent of "e.target" received from click event
         if (inIframe()) {
             // The new mail.google.com/chat application uses iframes that point to chat.google.com
             // Rooms are now renamed to spaces. Getting the space id from an attribute in the element
@@ -31,7 +32,8 @@ function createPinButtonElement(threadId, thread) {
             const roomId = window.location.pathname.match(/\/room\/([^\?\/]*)/)[1];
             threadLink = `https://chat.google.com/room/${roomId}/${threadId}`;
         }
-        sendPinnedThread({threadName, threadLink})
+        var roomName = document.querySelector("div[id*='ow'] > span > span > div > span > span > span").innerText
+        sendPinnedThread({threadName, threadLink, roomName})
         pinButton.setAttribute('data-tooltip', 'Pined');
         setTimeout(function () {
             pinButton.removeAttribute('data-tooltip');
