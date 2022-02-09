@@ -3,7 +3,6 @@ var EXTESION_ID = "nmoijimccdmgdfcolbbihkmamplnlolk"
 function addButtonOnThreads() {
     var threadsCard = document.querySelectorAll("c-wiz[data-topic-id][data-local-topic-id]")
     threadsCard.forEach(thread => {
-        setPinIconOnEveryIconMessageContainer(thread)
         setPinButtonOnEveryThread(thread)
     })
 }
@@ -93,37 +92,6 @@ function turnButtonContainerVisible(parent) {
       buttonContainer.style = "display:none";
     }
   }
-}
-
-function setPinIconOnEveryIconMessageContainer(parent) {
-    var messages = parent.querySelectorAll('div[jscontroller="VXdfxd"]')
-    messages.forEach(messageElement => {
-        iconsContainer = messageElement.parentElement.parentElement
-        if (
-            iconsContainer.querySelectorAll('[data-tooltip*="Pin Message"').length > 0 || // Pin Button already exists
-            iconsContainer.children.length === 1 // Add reaction button next to existing emoji reactions to a message
-        ) {
-            return
-        }
-        var pinElement = createPinIconElement(messageElement)
-        iconsContainer.appendChild(pinElement)
-    })
-}
-
-function createPinIconElement(parent) {
-    const container = document.createElement("div")
-    container.innerHTML = `
-    <svg style="width:24px;height:24px;margin-top: 4px" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12M8.8,14L10,12.8V4H14V12.8L15.2,14H8.8Z" />
-    </svg>`
-    container.className = parent.className
-    container.setAttribute('data-tooltip', 'Pin Message')
-    const pinSvg = container.children[0]
-    // copy classes from another svg icon
-    const svgOnParent = parent.querySelector('svg')
-    svgOnParent.classList.forEach(c => pinSvg.classList.add(c))
-
-    return container
 }
 
 function debounce(fn, delay) {
