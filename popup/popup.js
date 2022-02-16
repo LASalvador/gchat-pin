@@ -39,14 +39,16 @@ function removeThread(e) {
           return item.threadName !== threadObject.threadName && item.threadLink !== threadObject.threadLink
       })
       addPinnedThreads(newPinnedThreads)
-      chrome.storage.sync.set({pinnedThreads: newPinnedThreads})
+      chrome.storage.local.set({pinnedThreads: newPinnedThreads})
   })
 }
 
 
 
 function getPinnedThreadsAndRun(callback) {
-    chrome.storage.sync.get(["pinnedThreads"], function (storage) {
-        callback(storage.pinnedThreads)  
+    chrome.storage.local.get(["pinnedThreads"], function (storage) {
+        if(storage.pinnedThreads.length > 0) {
+            callback(storage.pinnedThreads) 
+        }
     })
 }

@@ -47,11 +47,14 @@ function createPinButtonElement(threadId, thread) {
 
 
 function sendPinnedThread(pinnedThread) {
-    console.log("sending message");
-    var port = chrome.runtime.connect(EXTESION_ID, {name: "pin_thread"})
-    port.postMessage(pinnedThread)
-    port.onDisconnect.addListener(() => {
-        console.log('disconnected port');
+    chrome.storage.local.get(["pinnedThreads"], function (storage) {
+        var pinnedThreads = storage.pinnedThreads;
+        if (pinnedThreads && pinnedThreads.length > 0) {
+            pinnedThreads.push(pinnedThread)    
+        } else {
+            pinnedThreads = [pinnedThread]
+        }
+        chrome.storage.local.set({pinnedThreads})
     })
 }
 

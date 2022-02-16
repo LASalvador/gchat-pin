@@ -22,18 +22,8 @@
             "run_at": "document_end"
         }
     ],
-    "externally_connectable": {
-        "matches": [
-            "https://chat.google.com/*",
-            "https://mail.google.com/chat/*"
-        ],
-        "accepts_tls_channel_id": false
-    },
     "permissions": [
         "storage"
-      ],
-    "background": {
-       "service_worker": "background/background.js"
-    },
-    "version": "0.0.1"
+    ],
+    "version": "1.0.1"
 }
