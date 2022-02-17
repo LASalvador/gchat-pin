@@ -39,16 +39,28 @@ function removeThread(e) {
           return item.threadName !== threadObject.threadName && item.threadLink !== threadObject.threadLink
       })
       addPinnedThreads(newPinnedThreads)
-      chrome.storage.local.set({pinnedThreads: newPinnedThreads})
+      var context = getBrowserContext()
+      context.storage.local.set({pinnedThreads: newPinnedThreads})
   })
 }
 
 
 
 function getPinnedThreadsAndRun(callback) {
-    chrome.storage.local.get(["pinnedThreads"], function (storage) {
+    var context = getBrowserContext()
+    context.storage.local.get(["pinnedThreads"])
+    .then(function (storage) {
         if(storage.pinnedThreads.length > 0) {
             callback(storage.pinnedThreads) 
         }
     })
+    .catch(()=> {
+        console.log("error getting pinned threads");
+    })
+}
+
+function getBrowserContext() {
+    return window.msBrowser ||
+      window.browser ||
+      window.chrome;
 }

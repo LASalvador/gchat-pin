@@ -1,5 +1,3 @@
-var EXTESION_ID = "nmoijimccdmgdfcolbbihkmamplnlolk"
-
 function addButtonOnThreads() {
     var threadsCard = document.querySelectorAll("c-wiz[data-topic-id][data-local-topic-id]")
     threadsCard.forEach(thread => {
@@ -47,7 +45,9 @@ function createPinButtonElement(threadId, thread) {
 
 
 function sendPinnedThread(pinnedThread) {
-    chrome.storage.local.get(["pinnedThreads"], function (storage) {
+    var context = getBrowserContext()
+    context.storage.local.get(["pinnedThreads"])
+    .then((storage)=> {
         var pinnedThreads = storage.pinnedThreads;
         if (pinnedThreads && pinnedThreads.length > 0) {
             pinnedThreads.push(pinnedThread)    
@@ -55,9 +55,16 @@ function sendPinnedThread(pinnedThread) {
             pinnedThreads = [pinnedThread]
         }
         chrome.storage.local.set({pinnedThreads})
+    }).catch(()=> {
+        console.log("error saving", pinnedThread.threadName);        
     })
 }
 
+function getBrowserContext() {
+    return window.msBrowser ||
+      window.browser ||
+      window.chrome;
+}
 
 function setPinButtonOnEveryThread(thread) {
     const threadId = thread.getAttribute("data-topic-id")
