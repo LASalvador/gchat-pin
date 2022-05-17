@@ -30,7 +30,7 @@ function createPinButtonElement(threadId, thread) {
             const roomId = window.location.pathname.match(/\/room\/([^\?\/]*)/)[1];
             threadLink = `https://chat.google.com/room/${roomId}/${threadId}`;
         }
-        var roomName = document.querySelector("div[id*='ow'] > span > span > div > span > span > span").innerText
+        var roomName = document.querySelector('c-wiz[role="main"]').ariaLabel;
         sendPinnedThread({threadName, threadLink, roomName})
         pinButton.setAttribute('data-tooltip', 'Pined');
         setTimeout(function () {
@@ -70,14 +70,14 @@ function setPinButtonOnEveryThread(thread) {
     const threadId = thread.getAttribute("data-topic-id")
     if (threadId && !thread.querySelector(".gchat-btn-pin")) {
         const pinButton = createPinButtonElement(threadId, thread)
-        turnButtonContainerVisible(thread)
-        var buttonContainer = thread.querySelector('div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)');
+        var buttonContainer = thread.querySelector('div[aria-label="Follow"] > span:first-of-type');
         if (
             buttonContainer &&
             buttonContainer.children.length === 2 &&
             buttonContainer.children[0].tagName === 'SPAN' &&
             buttonContainer.children[1].tagName === 'SPAN'
         ) {
+            turnButtonContainerVisible(buttonContainer);
             buttonContainer.style = 'display: inline-block;';
             buttonContainer.parentElement.style = 'display: inline-block; width: unset; opacity: 1;';
             buttonContainer.parentElement.parentElement.appendChild(pinButton);
@@ -87,23 +87,7 @@ function setPinButtonOnEveryThread(thread) {
 }
 
 function turnButtonContainerVisible(parent) {
-    // If the button container is currently hidden, we want to unhide it, and remove the Following button (as that's not required when the room is set to "Always Notify")
-  // eLNT1d appears to be the class used to hide elements
-  var buttonContainer = parent.querySelector(
-    "div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)"
-  );
-
-  if (buttonContainer) {
-    buttonContainer.style = "";
-    var buttonContainer1 = parent.querySelector(
-      "div:nth-of-type(2) > div:nth-of-type(1)"
-    );
-    if (buttonContainer1 && buttonContainer1.classList.contains("eLNT1d")) {
-      buttonContainer1.classList.remove("eLNT1d");
-
-      buttonContainer.style = "display:none";
-    }
-  }
+    parent.parentElement.parentElement.parentElement.style += '; display: block;';
 }
 
 function debounce(fn, delay) {
