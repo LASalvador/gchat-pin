@@ -53,7 +53,7 @@ function getRoomName(roomId) {
 
 
 function sendPinnedThread(pinnedThread) {
-    var context = getBrowserContext()
+    var context = getBrowserContext();
     context.storage.local.get(["pinnedThreads"])
     .then((storage)=> {
         var pinnedThreads = storage.pinnedThreads;
@@ -62,16 +62,14 @@ function sendPinnedThread(pinnedThread) {
         } else {
             pinnedThreads = [pinnedThread]
         }
-        chrome.storage.local.set({pinnedThreads})
+        context.storage.local.set({pinnedThreads})
     }).catch(()=> {
         console.log("error saving", pinnedThread.threadName);        
     })
 }
 
 function getBrowserContext() {
-    return window.msBrowser ||
-      window.browser ||
-      window.chrome;
+    return (typeof browser == 'object') ? browser : chrome;
 }
 
 function setPinButtonOnEveryThread(thread) {

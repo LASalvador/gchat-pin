@@ -39,7 +39,7 @@ function removeThread(e) {
           return item.threadName !== threadObject.threadName && item.threadLink !== threadObject.threadLink
       })
       addPinnedThreads(newPinnedThreads)
-      var context = getBrowserContext()
+      var context = getBrowserContext();
       context.storage.local.set({pinnedThreads: newPinnedThreads})
   })
 }
@@ -47,7 +47,7 @@ function removeThread(e) {
 
 
 function getPinnedThreadsAndRun(callback) {
-    var context = getBrowserContext()
+    var context = getBrowserContext();
     context.storage.local.get(["pinnedThreads"])
     .then(function (storage) {
         if(storage.pinnedThreads.length > 0) {
@@ -60,7 +60,5 @@ function getPinnedThreadsAndRun(callback) {
 }
 
 function getBrowserContext() {
-    return window.msBrowser ||
-      window.browser ||
-      window.chrome;
+    return (typeof browser == 'object') ? browser : chrome;
 }
