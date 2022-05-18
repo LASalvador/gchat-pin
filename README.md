@@ -1,7 +1,7 @@
 # Google Chat Pin Threads
 An extension to add a button to pin thread for every thread on Google chat. After Click on the Button is possible to see the pinned thread in the extension window.
 
-![Pinned thread gif](images/blur_pinned_thread.gif)
+![Pinned thread gif](assets/blur_pinned_thread.gif)
 
 ## Install from Chrome Web Store
 

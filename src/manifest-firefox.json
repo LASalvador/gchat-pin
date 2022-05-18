@@ -1,8 +1,8 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "GChat - Pin threads",
     "description": "Pin your threads to use another time",
-    "action": {
+    "browser_action": {
         "default_icon": "./images/logo.png",
         "default_popup": "./popup/index.html"
     },
@@ -25,5 +25,5 @@
     "permissions": [
         "storage"
     ],
-    "version": "1.0.2"
+    "version": "1.0.3"
 }
