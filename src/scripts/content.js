@@ -18,20 +18,21 @@ function createPinButtonElement(threadId, thread) {
     pinButton.className = "gchat-btn-pin"
     pinButton.innerHTML = "Pin Thread"
     pinButton.addEventListener('click', function () {
-        var threadName = prompt('Thread name')
-        let threadLink
+        var threadName = prompt('Give a name to this saved thread!');
+        let threadLink;
+        let roomId;
         // TODO get the thread link and room id from parent of "e.target" received from click event
         if (inIframe()) {
             // The new mail.google.com/chat application uses iframes that point to chat.google.com
             // Rooms are now renamed to spaces. Getting the space id from an attribute in the element
-            const roomId = thread.getAttribute('data-p').match(/space\/([^\\"]*)/)[1];
+            roomId = thread.getAttribute('data-p').match(/space\/([^\\"]*)/)[1];
             threadLink = `https://mail.google.com/chat/#chat/space/${roomId}/${threadId}`;
         } else {
-            const roomId = window.location.pathname.match(/\/room\/([^\?\/]*)/)[1];
+            roomId = window.location.pathname.match(/\/room\/([^\?\/]*)/)[1];
             threadLink = `https://chat.google.com/room/${roomId}/${threadId}`;
         }
-        var roomName = document.querySelector('c-wiz[role="main"]').ariaLabel;
-        sendPinnedThread({threadName, threadLink, roomName})
+        var roomName = getRoomName(roomId)
+        sendPinnedThread({threadName, threadLink, roomName});
         pinButton.setAttribute('data-tooltip', 'Pined');
         setTimeout(function () {
             pinButton.removeAttribute('data-tooltip');
@@ -41,6 +42,13 @@ function createPinButtonElement(threadId, thread) {
     })
 
     return pinButton
+}
+
+function getRoomName(roomId) {
+    var roomNameContainerSelector = 'div[data-soft-view-id="/room/'+ roomId +'"]'
+    var roomNameContainer = document.querySelector(roomNameContainerSelector)
+    var roomNameElement = roomNameContainer.querySelector('span[role="presentation"]')
+    return roomNameElement.textContent;
 }
 
 
