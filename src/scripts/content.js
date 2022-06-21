@@ -72,11 +72,23 @@ function getBrowserContext() {
     return (typeof browser == 'object') ? browser : chrome;
 }
 
+function getButtonContainer(thread) {
+    var arialLabelList = ['Follow', 'Seguir'];
+    var buttonContainer;
+    for (const arialLabel of arialLabelList) {
+        var buttonContainerSelector = `div[aria-label="${arialLabel}"] > span:first-of-type`;
+        buttonContainer = thread.querySelector(buttonContainerSelector);
+        if (buttonContainer) {
+            return buttonContainer;
+        }
+    }
+    return buttonContainer;
+}
+
 function setPinButtonOnEveryThread(thread) {
     const threadId = thread.getAttribute("data-topic-id")
     if (threadId && !thread.querySelector(".gchat-btn-pin")) {
-        const pinButton = createPinButtonElement(threadId, thread)
-        var buttonContainer = thread.querySelector('div[aria-label="Follow"] > span:first-of-type');
+        var buttonContainer = getButtonContainer(thread);
         if (
             buttonContainer &&
             buttonContainer.children.length === 2 &&
@@ -84,6 +96,7 @@ function setPinButtonOnEveryThread(thread) {
             buttonContainer.children[1].tagName === 'SPAN'
         ) {
             turnButtonContainerVisible(buttonContainer);
+            const pinButton = createPinButtonElement(threadId, thread)
             buttonContainer.style = 'display: inline-block;';
             buttonContainer.parentElement.style = 'display: inline-block; width: unset; opacity: 1;';
             buttonContainer.parentElement.parentElement.appendChild(pinButton);
