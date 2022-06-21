@@ -16,7 +16,7 @@ function inIframe () {
 function createPinButtonElement(threadId, thread) {
     var pinButton = document.createElement("div")
     pinButton.className = "gchat-btn-pin"
-    pinButton.innerHTML = "Pin Thread"
+    pinButton.textContent = "Pin Thread"
     pinButton.addEventListener('click', function () {
         var threadName = prompt('Give a name to this saved thread!');
         let threadLink;
