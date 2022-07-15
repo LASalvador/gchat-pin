@@ -2,6 +2,7 @@
 An extension to add a button to pin thread for every thread on Google chat. After Click on the Button is possible to see the pinned thread in the extension window.
 
 [<img src=".github/chrome.png">](https://chrome.google.com/webstore/detail/gchat-pin-threads/indkckjhobpnbgkjbppehhihfpdmcjon)
+[<img src=".github/firefox.png">](https://addons.mozilla.org/pt-BR/firefox/addon/gchat-pin-threads/)
 
 ![Pinned thread gif](assets/blur_pinned_thread.gif)
 
