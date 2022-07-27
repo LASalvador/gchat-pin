@@ -2,6 +2,7 @@ function addButtonOnThreads() {
     var threadsCard = document.querySelectorAll("c-wiz[data-topic-id][data-local-topic-id]")
     threadsCard.forEach(thread => {
         setPinButtonOnEveryThread(thread)
+        setPinIconOnEveryIconMessageContainer(thread)
     })
 }
 
@@ -21,10 +22,7 @@ function createPinButtonElement(threadId, thread) {
         var threadName = prompt('Give a name to this saved thread!');
         let threadLink;
         let roomId;
-        // TODO get the thread link and room id from parent of "e.target" received from click event
         if (inIframe()) {
-            // The new mail.google.com/chat application uses iframes that point to chat.google.com
-            // Rooms are now renamed to spaces. Getting the space id from an attribute in the element
             roomId = thread.getAttribute('data-p').match(/space\/([^\\"]*)/)[1];
             threadLink = `https://mail.google.com/chat/#chat/space/${roomId}/${threadId}`;
         } else {
@@ -107,6 +105,38 @@ function setPinButtonOnEveryThread(thread) {
 
 function turnButtonContainerVisible(parent) {
     parent.parentElement.parentElement.parentElement.style += '; display: block;';
+}
+
+
+function setPinIconOnEveryIconMessageContainer(parent) {
+    var messages = parent.querySelectorAll('div[jscontroller="VXdfxd"]')
+    messages.forEach(messageElement => {
+        iconsContainer = messageElement.parentElement.parentElement
+        if (
+            iconsContainer.querySelectorAll('[data-tooltip*="Pin Message"').length > 0 || // Pin Button already exists
+            iconsContainer.children.length === 1 // Add reaction button next to existing emoji reactions to a message
+        ) {
+            return
+        }
+        var pinElement = createPinIconElement(messageElement)
+        iconsContainer.appendChild(pinElement)
+    })
+}
+
+function createPinIconElement(parent) {
+    const container = document.createElement("div")
+    container.innerHTML = `
+    <svg style="width:24px;height:24px;margin-top: 4px" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12M8.8,14L10,12.8V4H14V12.8L15.2,14H8.8Z" />
+    </svg>`
+    container.className = parent.className
+    container.setAttribute('data-tooltip', 'Pin Message')
+    const pinSvg = container.children[0]
+    // copy classes from another svg icon
+    const svgOnParent = parent.querySelector('svg')
+    svgOnParent.classList.forEach(c => pinSvg.classList.add(c))
+
+    return container
 }
 
 function debounce(fn, delay) {
