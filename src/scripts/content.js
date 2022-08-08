@@ -43,10 +43,17 @@ function createPinButtonElement(threadId, thread) {
 }
 
 function getRoomName(roomId) {
-    var roomNameContainerSelector = 'div[data-soft-view-id="/room/'+ roomId +'"]'
+    var roomNameContainerSelector = getRoomSelector(roomId);
     var roomNameContainer = document.querySelector(roomNameContainerSelector)
     var roomNameElement = roomNameContainer.querySelector('span[role="presentation"]')
     return roomNameElement.textContent;
+}
+
+function getRoomSelector(roomId) {
+    if (roomId.match('dm/')) {
+        return 'div[data-soft-view-id="/'+ roomId +'"]'
+    }
+    return 'div[data-soft-view-id="/room/'+ roomId +'"]'
 }
 
 
@@ -108,22 +115,26 @@ function turnButtonContainerVisible(parent) {
 }
 
 
-function setPinIconOnEveryIconMessageContainer(parent) {
-    var messages = parent.querySelectorAll('div[jscontroller="VXdfxd"]')
+function setPinIconOnEveryIconMessageContainer(thread) {
+    var messages = thread.querySelectorAll('div[jscontroller="VXdfxd"]');
+    var roomData = thread.getAttribute('data-p').match(/dm\/([^\\"]*)/);
+    var messageId = thread.getAttribute('data-topic-id');
     messages.forEach(messageElement => {
         iconsContainer = messageElement.parentElement.parentElement
         if (
             iconsContainer.querySelectorAll('[data-tooltip*="Pin Message"').length > 0 || // Pin Button already exists
-            iconsContainer.children.length === 1 // Add reaction button next to existing emoji reactions to a message
+            iconsContainer.children.length === 1  ||
+            roomData === null// Add reaction button next to existing emoji reactions to a message
         ) {
             return
         }
-        var pinElement = createPinIconElement(messageElement)
+        var roomId = roomData[0];
+        var pinElement = createPinIconElement(messageElement, roomId, messageId);
         iconsContainer.appendChild(pinElement)
     })
 }
 
-function createPinIconElement(parent) {
+function createPinIconElement(parent, roomId, messageId) {
     const container = document.createElement("div")
     container.innerHTML = `
     <svg style="width:24px;height:24px;margin-top: 4px" viewBox="0 0 24 24">
@@ -135,6 +146,13 @@ function createPinIconElement(parent) {
     // copy classes from another svg icon
     const svgOnParent = parent.querySelector('svg')
     svgOnParent.classList.forEach(c => pinSvg.classList.add(c))
+
+    container.onclick = function(){
+        var threadName = prompt('Give a name to this saved message!');
+        var threadLink = `https://mail.google.com/chat/#chat/${roomId}/${messageId}`
+        var roomName = getRoomName(roomId)
+        sendPinnedThread({threadName, threadLink, roomName});
+    }
 
     return container
 }
